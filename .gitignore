@@ -1,0 +1,78 @@
+# ------------------------------
+# Java / Maven
+# ------------------------------
+target/
+**/target/
+*.class
+*.jar
+*.war
+*.ear
+hs_err_pid*
+replay_pid*
+dependency-reduced-pom.xml
+
+# Keep Maven wrapper jar if used
+!.mvn/wrapper/maven-wrapper.jar
+
+# ------------------------------
+# IDE / Editor
+# ------------------------------
+.idea/
+*.iws
+*.iml
+*.ipr
+.vscode/
+
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings/
+.springBeans
+.sts4-cache
+
+/nbproject/private/
+/nbbuild/
+/nbdist/
+/.nb-gradle/
+
+# ------------------------------
+# Logs / Runtime
+# ------------------------------
+logs/
+*.log
+*.out
+
+# ------------------------------
+# OS generated files
+# ------------------------------
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# ------------------------------
+# Local temporary files
+# ------------------------------
+.tmp/
+tmp/
+temp/
+*.tmp
+*.swp
+
+# ------------------------------
+# Local env / secrets
+# ------------------------------
+.env
+.env.*
+!.env.example
+*.local
+*.secret
+*.key
+*.pem
+
+# ------------------------------
+# Frontend artifacts (if any)
+# ------------------------------
+node_modules/
+dist/
+coverage/

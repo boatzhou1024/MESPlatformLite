@@ -1,0 +1,81 @@
+# ------------------------------------------------------------
+# 服务基础配置
+# ------------------------------------------------------------
+server:
+  port: 8080
+
+# ------------------------------------------------------------
+# Spring 核心组件
+# ------------------------------------------------------------
+spring:
+  application:
+    name: mes-platform
+
+  # MySQL 数据源（MyBatis-Plus 使用）
+  datasource:
+    url: jdbc:mysql://localhost:3306/mes_platform?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true
+    username: root
+    password: 123456
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  # Redis：用于设备列表/报表/AI 结果缓存
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      database: 0
+      password: 123456
+
+  # RabbitMQ：用于工单异步通知
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: admin
+    password: admin
+
+  # JSON 序列化默认配置
+  jackson:
+    time-zone: Asia/Shanghai
+    date-format: yyyy-MM-dd HH:mm:ss
+
+# ------------------------------------------------------------
+# MyBatis-Plus 行为配置
+# ------------------------------------------------------------
+mybatis-plus:
+  configuration:
+    # 下划线字段自动映射到驼峰属性
+    map-underscore-to-camel-case: true
+    # 控制台打印 SQL（学习/调试方便）
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+# ------------------------------------------------------------
+# JWT 配置
+# ------------------------------------------------------------
+jwt:
+  # 密钥长度要满足 HMAC 要求
+  secret: "MesPlatformJwtSecretKeyFor2026AndMustBeAtLeast32Chars"
+  # Token 有效期（毫秒），当前为 24h
+  expiration: 86400000
+  header: Authorization
+  prefix: "Bearer "
+
+# ------------------------------------------------------------
+# AI 诊断模块配置
+# ------------------------------------------------------------
+ai:
+  # 外部 AI 接口地址（mock-enabled=false 时生效）
+  endpoint: "http://localhost:9000/api/diagnosis"
+  api-key: "replace-with-your-real-key"
+  # 开发环境可设为 true，使用本地 mock 结果
+  mock-enabled: true
+  connect-timeout-ms: 2000
+  read-timeout-ms: 5000
+  # AI 诊断缓存时长（分钟）
+  cache-minutes: 30
+
+# ------------------------------------------------------------
+# Swagger/OpenAPI 文档入口
+# ------------------------------------------------------------
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
