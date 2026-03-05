@@ -1,5 +1,6 @@
 package com.boatzhou.mes.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.BindingBuilder;
 import org.springframework.amqp.core.DirectExchange;
@@ -52,7 +53,7 @@ public class RabbitMqConfig {
      * 使用 JSON 消息转换器，使 POJO 可自动序列化/反序列化。
      */
     @Bean
-    public MessageConverter rabbitMessageConverter() {
-        return new Jackson2JsonMessageConverter();
+    public MessageConverter rabbitMessageConverter(ObjectMapper objectMapper) {
+        return new Jackson2JsonMessageConverter(objectMapper);
     }
 }
