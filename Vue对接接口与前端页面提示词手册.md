@@ -691,3 +691,54 @@ export const updateWorkOrderStatus = (id: number, data: { status: 'PENDING' | 'P
 - 再按文件逐个输出完整代码（不要省略）
 - 代码可直接复制运行
 ```
+
+## 13. 2026-03-05 新增：用户角色管理对接
+
+## 13.1 新接口（仅 ADMIN）
+
+- `GET /api/users/{userId}/roles`：查询用户角色ID列表
+- `PUT /api/users/{userId}/roles`：覆盖设置用户角色（Body: `number[]`）
+- `POST /api/users/{userId}/roles/{roleId}`：添加角色
+- `DELETE /api/users/{userId}/roles/{roleId}`：移除角色
+
+说明：
+- 以上接口都需要 `Authorization: Bearer <token>`。
+- `operator` 调用会返回 `403`，前端应提示“无权限访问”。
+
+## 13.2 前端 API 文件建议
+
+新增 `src/api/userRole.ts`：
+
+```ts
+import http from '@/utils/http'
+
+export const listUserRoleIds = (userId: number) =>
+  http.get(`/users/${userId}/roles`)
+
+export const replaceUserRoles = (userId: number, roleIds: number[]) =>
+  http.put(`/users/${userId}/roles`, roleIds)
+
+export const addUserRole = (userId: number, roleId: number) =>
+  http.post(`/users/${userId}/roles/${roleId}`)
+
+export const removeUserRole = (userId: number, roleId: number) =>
+  http.delete(`/users/${userId}/roles/${roleId}`)
+```
+
+## 13.3 路由与菜单补充
+
+- 建议新增路由：`/users/roles`，并配置 `meta.role = 'ADMIN'`。
+- 菜单仅 `ADMIN` 显示“用户角色管理”。
+
+## 13.4 可直接使用的提示词
+
+```text
+请实现 UserRoleManageView.vue（仅 ADMIN 可访问）：
+- 左侧用户列表（可先用后端已有用户接口或临时静态数据）
+- 右侧角色多选框（ADMIN/OPERATOR）
+- 进入页面时调用 GET /api/users/{userId}/roles 回填
+- 点击保存时调用 PUT /api/users/{userId}/roles
+- 支持单个角色快捷添加/移除：POST/DELETE /api/users/{userId}/roles/{roleId}
+- 对 401/403/404 做清晰提示
+- 使用 Vue3 + TS + Element Plus，输出完整可运行代码
+```

@@ -21,3 +21,14 @@
 •	功能：根据设备异常状态，调用 AI 大模型接口，提供设备故障的可能原因和维修建议。
 •	使用 HttpClient 请求 AI 服务，处理返回的诊断结果。
 •	结果缓存至 Redis，防止频繁调用 AI 服务。
+
+6. 用户角色管理模块（新增）
+- 功能：维护用户与角色的多对多关系（sys_user_roles）。
+- 能力：查询用户角色、覆盖设置角色、添加角色、移除角色。
+- 权限：仅 ADMIN 可访问相关接口（/api/users/**）。
+- 业务价值：将角色配置从初始化脚本扩展为可运营能力，便于后台动态授权。
+- 接口：
+  - GET /api/users/{userId}/roles
+  - PUT /api/users/{userId}/roles
+  - POST /api/users/{userId}/roles/{roleId}
+  - DELETE /api/users/{userId}/roles/{roleId}

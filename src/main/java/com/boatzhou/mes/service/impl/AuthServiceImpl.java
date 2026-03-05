@@ -4,13 +4,12 @@ import com.boatzhou.mes.common.BusinessException;
 import com.boatzhou.mes.common.ErrorCode;
 import com.boatzhou.mes.dto.auth.LoginRequest;
 import com.boatzhou.mes.dto.auth.LoginResponse;
-import com.boatzhou.mes.entity.SysRole;
 import com.boatzhou.mes.entity.SysUser;
-import com.boatzhou.mes.mapper.SysRoleMapper;
 import com.boatzhou.mes.mapper.SysUserMapper;
 import com.boatzhou.mes.security.JwtProperties;
 import com.boatzhou.mes.security.JwtTokenProvider;
 import com.boatzhou.mes.service.AuthService;
+import com.boatzhou.mes.service.UserRoleService;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Service;
@@ -31,18 +30,18 @@ public class AuthServiceImpl implements AuthService {
 
     private final AuthenticationManager authenticationManager;
     private final SysUserMapper sysUserMapper;
-    private final SysRoleMapper sysRoleMapper;
+    private final UserRoleService userRoleService;
     private final JwtTokenProvider jwtTokenProvider;
     private final JwtProperties jwtProperties;
 
     public AuthServiceImpl(AuthenticationManager authenticationManager,
                            SysUserMapper sysUserMapper,
-                           SysRoleMapper sysRoleMapper,
+                           UserRoleService userRoleService,
                            JwtTokenProvider jwtTokenProvider,
                            JwtProperties jwtProperties) {
         this.authenticationManager = authenticationManager;
         this.sysUserMapper = sysUserMapper;
-        this.sysRoleMapper = sysRoleMapper;
+        this.userRoleService = userRoleService;
         this.jwtTokenProvider = jwtTokenProvider;
         this.jwtProperties = jwtProperties;
     }
@@ -64,9 +63,8 @@ public class AuthServiceImpl implements AuthService {
         }
 
         // 步骤3：查询角色列表，并规范 role 字符串。
-        List<String> roles = sysRoleMapper.selectByUserId(user.getId())
+        List<String> roles = userRoleService.listRoleCodesByUserId(user.getId())
                 .stream()
-                .map(SysRole::getRoleCode)
                 .map(roleCode -> roleCode.startsWith("ROLE_") ? roleCode.substring(5) : roleCode)
                 .distinct()
                 .toList();

@@ -1,9 +1,8 @@
 package com.boatzhou.mes.security;
 
-import com.boatzhou.mes.entity.SysRole;
 import com.boatzhou.mes.entity.SysUser;
-import com.boatzhou.mes.mapper.SysRoleMapper;
 import com.boatzhou.mes.mapper.SysUserMapper;
+import com.boatzhou.mes.service.UserRoleService;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -22,11 +21,11 @@ import java.util.List;
 public class CustomUserDetailsService implements UserDetailsService {
 
     private final SysUserMapper sysUserMapper;
-    private final SysRoleMapper sysRoleMapper;
+    private final UserRoleService userRoleService;
 
-    public CustomUserDetailsService(SysUserMapper sysUserMapper, SysRoleMapper sysRoleMapper) {
+    public CustomUserDetailsService(SysUserMapper sysUserMapper, UserRoleService userRoleService) {
         this.sysUserMapper = sysUserMapper;
-        this.sysRoleMapper = sysRoleMapper;
+        this.userRoleService = userRoleService;
     }
 
     /**
@@ -43,9 +42,8 @@ public class CustomUserDetailsService implements UserDetailsService {
             throw new UsernameNotFoundException("用户已禁用");
         }
 
-        List<SimpleGrantedAuthority> authorities = sysRoleMapper.selectByUserId(user.getId())
+        List<SimpleGrantedAuthority> authorities = userRoleService.listRoleCodesByUserId(user.getId())
                 .stream()
-                .map(SysRole::getRoleCode)
                 .map(roleCode -> roleCode.startsWith("ROLE_") ? roleCode : "ROLE_" + roleCode)
                 .map(SimpleGrantedAuthority::new)
                 .toList();

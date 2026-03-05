@@ -188,3 +188,25 @@ java -jar target/mes-0.0.1-SNAPSHOT.jar
 - 快速帮助：`HELP.md`
 - 学习与面试讲解：`项目学习与面试讲解手册.md`
 - Vue 对接手册：`Vue对接接口与前端页面提示词手册.md`
+
+## 12. 2026-03-05 功能更新：用户角色管理（RBAC）
+
+新增用户-角色关系维护能力，补齐 `sys_user_roles` 业务闭环：
+
+- 新增模块：`UserRoleService` + `UserRoleController`
+- 新增能力：查询用户角色、覆盖设置角色、添加角色、移除角色
+- 权限规则：`/api/users/**` 仅 `ADMIN` 可访问
+- 鉴权一致性：登录签发 JWT 与 Spring Security 加载权限，统一通过用户角色关系查询
+
+接口清单：
+
+1. `GET /api/users/{userId}/roles`：查询用户角色 ID 列表
+2. `PUT /api/users/{userId}/roles`：覆盖设置用户角色（请求体：`List<Long>`）
+3. `POST /api/users/{userId}/roles/{roleId}`：给用户添加角色
+4. `DELETE /api/users/{userId}/roles/{roleId}`：移除用户角色
+
+前端联调建议：
+
+- 新增“用户角色管理”页面仅对 `ADMIN` 菜单可见
+- 覆盖设置时建议使用“角色多选 + 整体保存”交互
+- 角色变更后建议提示目标用户重新登录，以便刷新 JWT 中角色信息
